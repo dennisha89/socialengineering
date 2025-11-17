@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follower Intelligence - Visual Mockups Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 3rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.95;
+        }
+
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .mockup-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .mockup-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.35);
+        }
+
+        .mockup-number {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .mockup-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #111827;
+        }
+
+        .mockup-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .mockup-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .mockup-features li {
+            padding: 0.5rem 0;
+            color: #4b5563;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mockup-features li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .view-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(102, 126, 234, 0.6);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 4rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .mockup-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Visual Mockups Gallery</h1>
+            <p>Production-ready designs for your follower intelligence app</p>
+        </div>
+
+        <div class="mockup-grid">
+            <!-- Mockup 1 -->
+            <a href="01-dashboard-empty.html" class="mockup-card">
+                <div class="mockup-number">1</div>
+                <h2 class="mockup-title">Dashboard - Empty State</h2>
+                <p class="mockup-description">
+                    Welcoming first-time user experience with clear guidance on what to do next.
+                </p>
+                <ul class="mockup-features">
+                    <li>Friendly hero section</li>
+                    <li>Clear "Upload CSV" CTA</li>
+                    <li>"How It Works" guide</li>
+                    <li>Purple gradient navigation</li>
+                </ul>
+                <span class="view-button">
+                    View Mockup →
+                </span>
+            </a>
+
+            <!-- Mockup 2 -->
+            <a href="02-dashboard-with-data.html" class="mockup-card">
+                <div class="mockup-number">2</div>
+                <h2 class="mockup-title">Dashboard - With Data</h2>
+                <p class="mockup-description">
+                    Dashboard showing user progress with stats and recent analyses.
+                </p>
+                <ul class="mockup-features">
+                    <li>3 animated stat cards</li>
+                    <li>Recent analyses list</li>
+                    <li>Interest tags preview</li>
+                    <li>Quick "Generate Ad" actions</li>
+                </ul>
+                <span class="view-button">
+                    View Mockup →
+                </span>
+            </a>
+
+            <!-- Mockup 3 -->
+            <a href="03-analysis-results.html" class="mockup-card">
+                <div class="mockup-number">3</div>
+                <h2 class="mockup-title">Analysis Results</h2>
+                <p class="mockup-description">
+                    Detailed follower insights with demographics and actionable recommendations.
+                </p>
+                <ul class="mockup-features">
+                    <li>Gradient hero summary</li>
+                    <li>Top interests with progress bars</li>
+                    <li>Demographics breakdown</li>
+                    <li>Best ad angles recommendations</li>
+                </ul>
+                <span class="view-button">
+                    View Mockup →
+                </span>
+            </a>
+
+            <!-- Mockup 4 -->
+            <a href="04-generated-ad.html" class="mockup-card">
+                <div class="mockup-number">4</div>
+                <h2 class="mockup-title">Generated Ad Result</h2>
+                <p class="mockup-description">
+                    Success celebration with AI-generated ad preview and explanation.
+                </p>
+                <ul class="mockup-features">
+                    <li>🎉 Success celebration header</li>
+                    <li>Instagram/Facebook preview</li>
+                    <li>"Why This Works" explanation</li>
+                    <li>Copy, Regenerate, Save actions</li>
+                </ul>
+                <span class="view-button">
+                    View Mockup →
+                </span>
+            </a>
+
+            <!-- Mockup 5 -->
+            <a href="05-mobile-responsive.html" class="mockup-card">
+                <div class="mockup-number">5</div>
+                <h2 class="mockup-title">Mobile Responsive</h2>
+                <p class="mockup-description">
+                    Mobile-optimized dashboard with bottom navigation and FAB.
+                </p>
+                <ul class="mockup-features">
+                    <li>Bottom navigation bar</li>
+                    <li>Floating action button</li>
+                    <li>Touch-friendly (44px targets)</li>
+                    <li>Stacked layouts</li>
+                </ul>
+                <span class="view-button">
+                    View Mockup →
+                </span>
+            </a>
+
+            <!-- Bonus: Design System -->
+            <a href="../VISUAL_DESIGN_SYSTEM.md" class="mockup-card" style="opacity: 0.9;">
+                <div class="mockup-number" style="background: #10b981;">📄</div>
+                <h2 class="mockup-title">Design System</h2>
+                <p class="mockup-description">
+                    Complete design specifications - colors, typography, components, animations.
+                </p>
+                <ul class="mockup-features">
+                    <li>Color palette & typography</li>
+                    <li>Component library</li>
+                    <li>Animation system</li>
+                    <li>Accessibility guidelines</li>
+                </ul>
+                <span class="view-button" style="background: #10b981;">
+                    View Docs →
+                </span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>✨ All mockups are production-ready and accessible</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Just open any HTML file to see the full design</p>
+        </div>
+    </div>
+</body>
+</html>
