@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Follower Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-600: #667eea;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+
+            --success-100: #d1fae5;
+            --success-600: #059669;
+            --info-100: #dbeafe;
+            --info-600: #2563eb;
+            --warning-100: #fef3c7;
+            --warning-600: #d97706;
+
+            --font-sans: 'Inter', sans-serif;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .navbar {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 40px -10px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px -15px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-info h3 {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            color: var(--success-600);
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .icon-blue {
+            background: var(--info-100);
+            color: var(--info-600);
+        }
+
+        .icon-green {
+            background: var(--success-100);
+            color: var(--success-600);
+        }
+
+        .icon-purple {
+            background: #e9d5ff;
+            color: #9333ea;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Analysis Card */
+        .analysis-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .analysis-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .analysis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .analysis-meta {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .analysis-badge {
+            background: var(--info-100);
+            color: var(--info-600);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .analysis-summary {
+            color: var(--gray-700);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .tag-primary {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .analysis-actions {
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--primary-600);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .btn-text:hover {
+            color: var(--primary-600);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .analysis-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="14" fill="white" opacity="0.2"/>
+                    <path d="M16 8l-6 8h4v8h4v-8h4l-6-8z" fill="white"/>
+                </svg>
+                <span>Follower Intelligence</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="#" class="nav-link" style="background: rgba(255,255,255,0.15)">Dashboard</a></li>
+                <li><a href="#" class="nav-link">History</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <button class="btn-primary">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Upload More Followers
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Total Analyses</h3>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change">↑ +2 this week</div>
+                </div>
+                <div class="stat-icon icon-blue">
+                    📊
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Ads Generated</h3>
+                    <div class="stat-value">34</div>
+                    <div class="stat-change">↑ +8 this week</div>
+                </div>
+                <div class="stat-icon icon-green">
+                    📢
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Followers Analyzed</h3>
+                    <div class="stat-value">15,420</div>
+                    <div class="stat-change">Total analyzed</div>
+                </div>
+                <div class="stat-icon icon-purple">
+                    👥
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Analyses -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Recent Analyses</h2>
+                <button class="btn-text">
+                    View All
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div>
+                        <h3 class="analysis-title">@fitness_coach</h3>
+                        <p class="analysis-meta">2 hours ago</p>
+                    </div>
+                    <span class="analysis-badge">1,234 followers</span>
+                </div>
+
+                <p class="analysis-summary">
+                    Your audience is primarily fitness enthusiasts aged 25-34 who care about health,
+                    nutrition, and personal growth. They're motivated by transformation stories and practical tips.
+                </p>
+
+                <div class="interest-tags">
+                    <span class="tag tag-primary">Fitness: 32%</span>
+                    <span class="tag tag-primary">Nutrition: 28%</span>
+                    <span class="tag tag-primary">Yoga: 18%</span>
+                    <span class="tag">Mindfulness: 12%</span>
+                    <span class="tag">Wellness: 10%</span>
+                </div>
+
+                <div class="analysis-actions">
+                    <button class="btn-secondary">View Details</button>
+                    <button class="btn-primary" style="box-shadow: none; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        Generate Ad →
+                    </button>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div>
+                        <h3 class="analysis-title">@travel_blogger</h3>
+                        <p class="analysis-meta">1 day ago</p>
+                    </div>
+                    <span class="analysis-badge">3,420 followers</span>
+                </div>
+
+                <p class="analysis-summary">
+                    Adventure seekers and wanderlust enthusiasts who value authentic experiences.
+                    Interested in budget travel tips, hidden destinations, and photography.
+                </p>
+
+                <div class="interest-tags">
+                    <span class="tag tag-primary">Travel: 40%</span>
+                    <span class="tag tag-primary">Photography: 25%</span>
+                    <span class="tag tag-primary">Food: 15%</span>
+                    <span class="tag">Adventure: 12%</span>
+                    <span class="tag">Culture: 8%</span>
+                </div>
+
+                <div class="analysis-actions">
+                    <button class="btn-secondary">View Details</button>
+                    <button class="btn-primary" style="box-shadow: none; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        Generate Ad →
+                    </button>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div>
+                        <h3 class="analysis-title">@eco_products</h3>
+                        <p class="analysis-meta">3 days ago</p>
+                    </div>
+                    <span class="analysis-badge">892 followers</span>
+                </div>
+
+                <p class="analysis-summary">
+                    Environmentally conscious consumers who prioritize sustainable living.
+                    Interested in zero-waste lifestyle, ethical brands, and green living tips.
+                </p>
+
+                <div class="interest-tags">
+                    <span class="tag tag-primary">Sustainability: 35%</span>
+                    <span class="tag tag-primary">Lifestyle: 22%</span>
+                    <span class="tag tag-primary">Wellness: 18%</span>
+                    <span class="tag">DIY: 15%</span>
+                    <span class="tag">Vegan: 10%</span>
+                </div>
+
+                <div class="analysis-actions">
+                    <button class="btn-secondary">View Details</button>
+                    <button class="btn-primary" style="box-shadow: none; padding: 0.5rem 1rem; font-size: 0.875rem;">
+                        Generate Ad →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

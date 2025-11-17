@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Ad | Follower Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-600: #667eea;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success-100: #d1fae5;
+            --success-600: #059669;
+            --font-sans: 'Inter', sans-serif;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .navbar {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .success-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-100);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            animation: scaleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-subtitle {
+            color: var(--gray-600);
+            font-size: 1.125rem;
+        }
+
+        /* Ad Preview Card */
+        .ad-preview-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-2xl);
+            margin-bottom: 2rem;
+            animation: slideUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ad-preview-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ad-preview-body {
+            padding: 2rem;
+        }
+
+        .ad-section {
+            margin-bottom: 2rem;
+        }
+
+        .ad-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .ad-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .ad-headline {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.3;
+        }
+
+        .ad-body {
+            font-size: 1rem;
+            color: var(--gray-700);
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .ad-cta-button {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Why This Works */
+        .insight-card {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffe6f0 100%);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .insight-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-text {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            flex: 1;
+            justify-content: center;
+            box-shadow: 0 10px 40px -10px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px -15px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--primary-600);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="14" fill="white" opacity="0.2"/>
+                    <path d="M16 8l-6 8h4v8h4v-8h4l-6-8z" fill="white"/>
+                </svg>
+                <span>Follower Intelligence</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Success Header -->
+        <div class="success-header">
+            <div class="success-icon">🎉</div>
+            <h1 class="success-title">Your Ad Is Ready!</h1>
+            <p class="success-subtitle">AI-generated copy tailored to your audience</p>
+        </div>
+
+        <!-- Ad Preview -->
+        <div class="ad-preview-card">
+            <div class="ad-preview-header">
+                📱 Instagram/Facebook Ad Preview
+            </div>
+            <div class="ad-preview-body">
+                <!-- Headline -->
+                <div class="ad-section">
+                    <div class="ad-label">Headline</div>
+                    <div class="ad-headline">
+                        Transform Your Body in Just 12 Minutes a Day
+                    </div>
+                </div>
+
+                <!-- Body Copy -->
+                <div class="ad-section">
+                    <div class="ad-label">Primary Text</div>
+                    <div class="ad-body">Busy professional? No time for the gym?
+
+Our 12-week coaching program is designed for people like you—quick home workouts, meal plans that fit your schedule, and personal support when you need it.
+
+No expensive equipment. No complicated routines. Just real results from people who finally found time for themselves.
+
+Join 1,000+ professionals who've transformed their health without sacrificing their career. See what's possible when fitness fits your life, not the other way around.</div>
+                </div>
+
+                <!-- CTA -->
+                <div class="ad-section">
+                    <div class="ad-label">Call to Action</div>
+                    <button class="ad-cta-button">Start Your Transformation →</button>
+                </div>
+
+                <!-- Divider -->
+                <hr style="border: none; border-top: 2px solid var(--gray-100); margin: 2rem 0;">
+
+                <!-- Why This Works -->
+                <div class="insight-card">
+                    <div class="insight-title">
+                        💡 Why This Works for Your Audience
+                    </div>
+                    <div class="insight-text">
+                        This ad speaks directly to your audience's #1 pain point: <strong>lack of time</strong>.
+                        It acknowledges their busy lifestyle, offers a realistic solution (12 minutes),
+                        and provides social proof (1,000+ professionals). The language emphasizes
+                        <strong>convenience and practicality</strong> over intensity—exactly what
+                        fitness-conscious professionals aged 25-34 respond to.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button class="btn btn-secondary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                Copy to Clipboard
+            </button>
+            <button class="btn btn-secondary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Regenerate
+            </button>
+            <button class="btn btn-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Save Ad
+            </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <button class="btn btn-ghost">Generate Another Variant</button>
+        </div>
+    </div>
+</body>
+</html>
