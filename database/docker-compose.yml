@@ -1,0 +1,228 @@
+version: '3.8'
+
+services:
+  # PostgreSQL (Core transactional database)
+  postgres:
+    image: postgres:15-alpine
+    container_name: social_intelligence_postgres
+    environment:
+      POSTGRES_DB: social_intelligence
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schemas/postgresql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d social_intelligence"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # TimescaleDB (Time-series metrics)
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: social_intelligence_timescaledb
+    environment:
+      POSTGRES_DB: social_intelligence_metrics
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./schemas/timescaledb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d social_intelligence_metrics"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # MongoDB (Document store)
+  mongodb:
+    image: mongo:6
+    container_name: social_intelligence_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev_user
+      MONGO_INITDB_ROOT_PASSWORD: dev_password
+      MONGO_INITDB_DATABASE: social_intelligence
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./schemas/mongodb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # Redis (Cache layer)
+  redis:
+    image: redis:7-alpine
+    container_name: social_intelligence_redis
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # Redis Commander (Redis GUI)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: social_intelligence_redis_commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - social_intelligence_net
+
+  # Elasticsearch (Search engine)
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: social_intelligence_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # Kibana (Elasticsearch GUI)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: social_intelligence_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - social_intelligence_net
+
+  # pgAdmin (PostgreSQL GUI)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: social_intelligence_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+      - timescaledb
+    networks:
+      - social_intelligence_net
+
+  # Mongo Express (MongoDB GUI)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: social_intelligence_mongo_express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: dev_user
+      ME_CONFIG_MONGODB_ADMINPASSWORD: dev_password
+      ME_CONFIG_MONGODB_URL: mongodb://dev_user:dev_password@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "8082:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - social_intelligence_net
+
+  # MinIO (S3-compatible object storage)
+  minio:
+    image: minio/minio:latest
+    container_name: social_intelligence_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - social_intelligence_net
+
+  # Grafana (Metrics visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: social_intelligence_grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=redis-datasource
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - postgres
+      - timescaledb
+      - redis
+    networks:
+      - social_intelligence_net
+
+networks:
+  social_intelligence_net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  timescaledb_data:
+  mongodb_data:
+  redis_data:
+  elasticsearch_data:
+  pgadmin_data:
+  minio_data:
+  grafana_data:

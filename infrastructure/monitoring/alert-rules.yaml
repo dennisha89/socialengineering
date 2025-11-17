@@ -1,0 +1,68 @@
+# Prometheus Alert Rules
+
+groups:
+  - name: application_alerts
+    interval: 30s
+    rules:
+      # High error rate
+      - alert: HighErrorRate
+        expr: |
+          rate(http_requests_total{status=~"5.."}[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: P1
+          team: engineering
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is above 1% for 5 minutes"
+
+      # High latency
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 10m
+        labels:
+          severity: P2
+          team: engineering
+        annotations:
+          summary: "High P95 latency"
+          description: "P95 latency is above 1 second"
+
+  - name: infrastructure_alerts
+    interval: 30s
+    rules:
+      # Pod crash looping
+      - alert: PodCrashLooping
+        expr: |
+          rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+        for: 5m
+        labels:
+          severity: P1
+          team: sre
+        annotations:
+          summary: "Pod is crash looping"
+          description: "Pod has restarted more than once in 15 minutes"
+
+      # Node disk pressure
+      - alert: NodeDiskPressure
+        expr: |
+          kube_node_status_condition{condition="DiskPressure",status="true"} == 1
+        for: 5m
+        labels:
+          severity: P1
+          team: sre
+        annotations:
+          summary: "Node has disk pressure"
+          description: "Node is running out of disk space"
+
+      # Database connections high
+      - alert: DatabaseConnectionsHigh
+        expr: |
+          pg_stat_database_numbackends / pg_settings_max_connections > 0.9
+        for: 5m
+        labels:
+          severity: P0
+          team: sre
+        annotations:
+          summary: "Database connections near limit"
+          description: "Database connection usage is above 90%"

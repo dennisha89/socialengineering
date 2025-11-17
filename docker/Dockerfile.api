@@ -1,0 +1,51 @@
+# Multi-stage Docker build for API service
+# Optimized for security and size
+
+# Stage 1: Builder
+FROM node:20-alpine AS builder
+
+WORKDIR /build
+
+# Install dependencies only
+COPY package*.json ./
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copy source code
+COPY src/ ./src/
+COPY tsconfig.json ./
+
+# Build application
+RUN npm run build
+
+# Stage 2: Production
+FROM node:20-alpine
+
+# Create non-root user
+RUN addgroup -g 10000 appuser && \
+    adduser -D -u 10000 -G appuser appuser
+
+WORKDIR /app
+
+# Copy only necessary files from builder
+COPY --from=builder --chown=appuser:appuser /build/node_modules ./node_modules
+COPY --from=builder --chown=appuser:appuser /build/dist ./dist
+COPY --from=builder --chown=appuser:appuser /build/package*.json ./
+
+# Security: Remove unnecessary packages
+RUN apk --no-cache add dumb-init && \
+    rm -rf /var/cache/apk/*
+
+# Switch to non-root user
+USER appuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD node healthcheck.js
+
+# Expose port
+EXPOSE 8080
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["node", "dist/index.js"]
