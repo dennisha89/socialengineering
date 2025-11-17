@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follower Intelligence - AI-Powered Audience Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    <h1 class="text-xl font-bold">Follower Intelligence</h1>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="showSection('dashboard')" class="px-4 py-2 rounded hover:bg-white/20 transition">Dashboard</button>
+                    <button onclick="showSection('analyze')" class="px-4 py-2 rounded hover:bg-white/20 transition">Analyze</button>
+                    <button onclick="showSection('history')" class="px-4 py-2 rounded hover:bg-white/20 transition">History</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="section">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h2>
+                <p class="text-gray-600">Overview of your follower intelligence</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Total Analyses</p>
+                            <p id="stat-analyses" class="text-3xl font-bold text-gray-900">0</p>
+                        </div>
+                        <div class="bg-blue-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Ads Generated</p>
+                            <p id="stat-ads" class="text-3xl font-bold text-gray-900">0</p>
+                        </div>
+                        <div class="bg-green-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Followers Analyzed</p>
+                            <p id="stat-followers" class="text-3xl font-bold text-gray-900">0</p>
+                        </div>
+                        <div class="bg-purple-100 rounded-full p-3">
+                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="showSection('analyze')" class="flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition">
+                        <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900">Upload Followers</p>
+                            <p class="text-sm text-gray-600">Analyze your audience</p>
+                        </div>
+                    </button>
+                    <button onclick="showSection('history')" class="flex items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-left">
+                            <p class="font-semibold text-gray-900">View History</p>
+                            <p class="text-sm text-gray-600">Past analyses & ads</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analyze Section -->
+        <div id="analyze-section" class="section hidden">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analyze Followers</h2>
+                <p class="text-gray-600">Upload a CSV of your Instagram followers to get AI-powered insights</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Upload Form -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Step 1: Upload Follower Data</h3>
+
+                    <form id="upload-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Upload CSV File
+                            </label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition">
+                                <input type="file" id="csv-file" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
+                                <label for="csv-file" class="cursor-pointer">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm text-gray-600">
+                                        Click to upload or drag and drop
+                                    </p>
+                                    <p class="text-xs text-gray-500">CSV file with follower data</p>
+                                </label>
+                            </div>
+                            <p id="file-name" class="mt-2 text-sm text-gray-600"></p>
+                        </div>
+
+                        <button type="submit" id="analyze-btn" class="w-full gradient-bg text-white py-3 px-4 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50">
+                            Analyze Followers
+                        </button>
+                    </form>
+
+                    <div id="upload-status" class="mt-4 hidden">
+                        <div class="flex items-center justify-center space-x-2">
+                            <svg class="animate-spin h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-sm text-gray-600">Analyzing followers with AI...</span>
+                        </div>
+                    </div>
+
+                    <!-- CSV Format Help -->
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-blue-900 mb-2">CSV Format:</h4>
+                        <pre class="text-xs bg-white p-2 rounded">username,bio,follower_count
+john_doe,Fitness enthusiast 💪,1250
+jane_smith,Travel blogger ✈️,3420</pre>
+                        <a href="sample-followers.csv" download class="text-sm text-blue-600 hover:underline mt-2 inline-block">Download sample CSV</a>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="analysis-results" class="bg-white rounded-lg shadow p-6 hidden">
+                    <h3 class="text-lg font-semibold mb-4">Analysis Results</h3>
+                    <div id="results-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div id="history-section" class="section hidden">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">History</h2>
+                <p class="text-gray-600">Your past analyses and generated ads</p>
+            </div>
+
+            <div id="history-list" class="space-y-4">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Generation Modal -->
+    <div id="ad-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Generate Ad</h3>
+                    <button onclick="closeAdModal()" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="ad-form" class="space-y-4">
+                    <input type="hidden" id="ad-analysis-id">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">What are you promoting?</label>
+                        <input type="text" id="ad-topic" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., Online fitness coaching">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tone</label>
+                        <select id="ad-tone" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="casual">Casual & Friendly</option>
+                            <option value="professional">Professional</option>
+                            <option value="enthusiastic">Enthusiastic</option>
+                            <option value="authoritative">Authoritative</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="w-full gradient-bg text-white py-3 px-4 rounded-lg font-semibold hover:opacity-90 transition">
+                        Generate Ad Copy
+                    </button>
+                </form>
+
+                <div id="ad-result" class="mt-6 hidden">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let currentAnalysisId = null;
+
+        // Navigation
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`${section}-section`).classList.remove('hidden');
+
+            if (section === 'dashboard') loadStats();
+            if (section === 'history') loadHistory();
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/stats`);
+                const data = await response.json();
+
+                document.getElementById('stat-analyses').textContent = data.total_analyses;
+                document.getElementById('stat-ads').textContent = data.total_ads_generated;
+                document.getElementById('stat-followers').textContent = data.total_followers_analyzed.toLocaleString();
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // File upload
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = `Selected: ${file.name}`;
+            }
+        }
+
+        // Analyze followers
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('csv-file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please select a CSV file');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            document.getElementById('analyze-btn').disabled = true;
+            document.getElementById('upload-status').classList.remove('hidden');
+            document.getElementById('analysis-results').classList.add('hidden');
+
+            try {
+                const response = await fetch(`${API_URL}/api/analyze-followers`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentAnalysisId = data.analysis_id;
+                    displayResults(data);
+                } else {
+                    alert('Error: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error analyzing followers: ' + error.message);
+            } finally {
+                document.getElementById('analyze-btn').disabled = false;
+                document.getElementById('upload-status').classList.add('hidden');
+            }
+        });
+
+        // Display results
+        function displayResults(data) {
+            const insights = data.insights;
+            const resultsDiv = document.getElementById('results-content');
+
+            resultsDiv.innerHTML = `
+                <div class="space-y-4 fade-in">
+                    <div class="flex justify-between items-center pb-3 border-b">
+                        <div>
+                            <p class="text-sm text-gray-600">Analyzed ${data.analyzed_count} followers</p>
+                            <p class="text-xs text-gray-500">Cost: ~${data.cost_estimate}</p>
+                        </div>
+                        <button onclick="openAdModal(${data.analysis_id})" class="gradient-bg text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90">
+                            Generate Ad
+                        </button>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Summary</h4>
+                        <p class="text-gray-700">${insights.summary || 'No summary available'}</p>
+                    </div>
+
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Top Interests</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${(insights.top_interests || []).map(interest =>
+                                `<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">${interest}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    ${insights.age_range ? `
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Age Range</h4>
+                        <p class="text-gray-700">${insights.age_range}</p>
+                    </div>
+                    ` : ''}
+
+                    ${insights.personality_traits && insights.personality_traits.length > 0 ? `
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Personality Traits</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            ${insights.personality_traits.map(trait => `<li>${trait}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+
+                    ${insights.ad_angles && insights.ad_angles.length > 0 ? `
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-900 mb-2">💡 Best Ad Angles</h4>
+                        <ul class="list-disc list-inside text-green-800">
+                            ${insights.ad_angles.map(angle => `<li>${angle}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('analysis-results').classList.remove('hidden');
+        }
+
+        // Ad modal
+        function openAdModal(analysisId) {
+            currentAnalysisId = analysisId;
+            document.getElementById('ad-analysis-id').value = analysisId;
+            document.getElementById('ad-modal').classList.remove('hidden');
+            document.getElementById('ad-result').classList.add('hidden');
+        }
+
+        function closeAdModal() {
+            document.getElementById('ad-modal').classList.add('hidden');
+            document.getElementById('ad-form').reset();
+        }
+
+        // Generate ad
+        document.getElementById('ad-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const analysisId = document.getElementById('ad-analysis-id').value;
+            const topic = document.getElementById('ad-topic').value;
+            const tone = document.getElementById('ad-tone').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/generate-ad`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ analysis_id: parseInt(analysisId), topic, tone })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    displayAd(data.ad_content);
+                } else {
+                    alert('Error: ' + data.detail);
+                }
+            } catch (error) {
+                alert('Error generating ad: ' + error.message);
+            }
+        });
+
+        // Display ad
+        function displayAd(ad) {
+            const resultDiv = document.getElementById('ad-result');
+
+            resultDiv.innerHTML = `
+                <div class="border-t pt-4 space-y-4 fade-in">
+                    <h4 class="font-bold text-lg text-gray-900">Generated Ad Copy</h4>
+
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-200">
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-600 mb-1">HEADLINE</p>
+                            <p class="text-xl font-bold text-gray-900">${ad.headline}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-600 mb-1">PRIMARY TEXT</p>
+                            <p class="text-gray-800 whitespace-pre-line">${ad.primary_text}</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-xs text-gray-600 mb-1">CALL TO ACTION</p>
+                            <button class="gradient-bg text-white px-6 py-2 rounded-lg font-semibold">
+                                ${ad.cta}
+                            </button>
+                        </div>
+
+                        ${ad.why_it_works ? `
+                        <div class="pt-4 border-t border-purple-200">
+                            <p class="text-xs text-gray-600 mb-1">WHY THIS WORKS</p>
+                            <p class="text-sm text-gray-700">${ad.why_it_works}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="copyAdToClipboard()" class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-50">
+                            Copy to Clipboard
+                        </button>
+                        <button onclick="closeAdModal(); loadHistory();" class="flex-1 gradient-bg text-white py-2 px-4 rounded-lg hover:opacity-90">
+                            Done
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            resultDiv.classList.remove('hidden');
+        }
+
+        // Copy ad
+        function copyAdToClipboard() {
+            const ad = document.getElementById('ad-result').textContent;
+            navigator.clipboard.writeText(ad);
+            alert('Ad copied to clipboard!');
+        }
+
+        // Load history
+        async function loadHistory() {
+            try {
+                const response = await fetch(`${API_URL}/api/history`);
+                const data = await response.json();
+
+                const historyDiv = document.getElementById('history-list');
+
+                if (data.history.length === 0) {
+                    historyDiv.innerHTML = `
+                        <div class="text-center py-12 bg-white rounded-lg shadow">
+                            <p class="text-gray-600">No analyses yet. Start by uploading followers!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                historyDiv.innerHTML = data.history.map(item => `
+                    <div class="bg-white rounded-lg shadow p-6 fade-in">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-semibold text-lg">${item.user_id}</h3>
+                                <p class="text-sm text-gray-600">${new Date(item.created_at).toLocaleDateString()}</p>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                ${item.follower_count} followers
+                            </span>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-700">${item.insights.summary || 'Analysis complete'}</p>
+                        </div>
+
+                        <div class="flex gap-2 mb-4">
+                            ${(item.insights.top_interests || []).slice(0, 3).map(interest =>
+                                `<span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">${interest}</span>`
+                            ).join('')}
+                        </div>
+
+                        <div class="flex justify-between items-center pt-4 border-t">
+                            <p class="text-sm text-gray-600">${item.ads_generated} ads generated</p>
+                            <button onclick="openAdModal(${item.id})" class="text-blue-600 hover:text-blue-700 font-semibold text-sm">
+                                Generate Another Ad →
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        // Initialize
+        loadStats();
+    </script>
+</body>
+</html>
